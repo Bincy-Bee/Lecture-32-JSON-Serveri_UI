@@ -1,3 +1,5 @@
+
+
 const display = (data) => {
   data.map((ele) => {
     let img = document.createElement("img");
@@ -18,6 +20,12 @@ const display = (data) => {
     let btn1 = document.createElement("button");
     btn1.innerHTML = "Update";
     btn1.addEventListener("click", () => {
+        fetch("http://localhost:8080/students")
+        .then((sss) => sss.json())
+        .then((dbdata) => {
+            updatedata(dbdata)
+        });
+
       updatedata(ele.id);
     });
 
@@ -34,17 +42,22 @@ const display = (data) => {
     document.getElementById("stdtsdb").append(div);
   });
 };
-const updatedata = (id) => {
-     let udata = students.find((stu)=> (stu.id == id));
-     console.log(udata);
 
-  // fetch(`http://localhost:8080/students/${id}`,{
-  //     method : "PATCH",
-  //     body : JSON.stringify(student),
-  //     headers : {"Content-Type": "application/json"},
-  // })
-  // .then((res)=> res.json())
-  // .then((data)=> console.log(data))
+const updatedata = (data) => {
+   
+
+    // console.log(id)
+    // console.log(student)
+    //  let udata = students.find((stu)=> (stu.id == id));
+    //  console.log(udata);
+
+  fetch(`http://localhost:8080/students`,{
+      method : "PATCH",
+      body : JSON.stringify(data),
+      headers : {"Content-Type": "application/json"},
+  })
+  .then((res)=> res.json())
+  .then((data)=> console.log(data))
 };
 const deletdata = async (id) => {
   fetch(`http://localhost:8080/students/${id}`, {
@@ -62,9 +75,10 @@ document.querySelector("#form").addEventListener("submit", (e) => {
     studentEmail: document.getElementById("email").value,
     studentCourse: document.getElementById("course").value,
   };
-
-
+  
   console.log(student);
+
+
 
   fetch("http://localhost:8080/students", {
     method: "POST",
@@ -78,3 +92,4 @@ document.querySelector("#form").addEventListener("submit", (e) => {
 fetch("http://localhost:8080/students")
   .then((sss) => sss.json())
   .then((dbdata) => display(dbdata));
+ 
